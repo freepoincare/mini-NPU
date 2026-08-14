@@ -1,4 +1,8 @@
+import json
 import time
+
+from pattern_generator import generate_cross
+
 
 EPSILON = 1e-9
 REPEAT = 10
@@ -31,7 +35,7 @@ def input_matrix(n, name):
                 values = input(f"Row {i + 1}: ").split()
                 # check number of elements
                 if len(values) != n:
-                    raise ValueError(f"각 줄에 정확히 {n}개의 숫자를 입력하세요.")
+                    raise ValueError(f"각 줄에 정확히 {n}개의 숫자를 공백으로 구분하여 입력하세요.")
                 # check the value (0 or 1)
                 row = []
                 for v in values:
@@ -41,7 +45,8 @@ def input_matrix(n, name):
                 matrix.append(row)
             return matrix
         except ValueError as e:
-            print(f"⚠️ 입력 오류: {e} 처음부터 다시 입력해주세요.")
+            print(f"\n⚠️ 입력 오류: {e} 처음부터 다시 입력해주세요.")
+            time.sleep(1)
 
 
 def mac(pattern, filter_matrix):
@@ -62,7 +67,8 @@ def decide_label(score_cross, score_x):
 
 
 def extract_size(key):
-    return
+    parts = key.split("_")
+    return int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else None
 
 
 def benchmark(pattern, filter_matrix, repeat=REPEAT):
@@ -76,5 +82,23 @@ def benchmark(pattern, filter_matrix, repeat=REPEAT):
 
 
 def load_json(filename):
-    return
+    with open(filename, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data
 
+
+def run_performance_analysis(filters, size_list=[3, 5, 13, 25], repeat=REPEAT):
+    # performance analysis for each filter size
+    for size in size_list:
+        filter_data = filters.get(f"size_{size}")
+        filter_cross = filter_data["cross"]
+        filter_x = filter_data["x"]
+
+        # benchmark with a sample pattern (Cross)
+        pattern = generate_cross(size)
+        average_cross = benchmark(pattern, filter_cross)
+        average_x = benchmark(pattern, filter_x)
+        average_total = average_cross + average_x
+
+        print(f"{size:<10} {average_total:<20.3f} {repeat * 2}")
+    return
