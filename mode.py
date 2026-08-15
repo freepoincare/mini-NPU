@@ -1,6 +1,6 @@
-from pathlib import Path
+import time
 from config import DATA_FILE_PATH, EPSILON, REPEAT
-from utility import *
+from utility import input_matrix, mac, benchmark, load_json, extract_size, normalize_label, validate_matrix, decide_label, run_performance_analysis
 
 
 def run_user_mode(n):
@@ -36,7 +36,10 @@ def run_user_mode(n):
     average_a = benchmark(pattern, filter_a)
     average_b = benchmark(pattern, filter_b)
     average = average_a + average_b
-    print(f"연산 시간(평균/{REPEAT}회): {average:.3f} ms")
+    print(f"총 연산 시간(평균/{REPEAT}회): {average:.3f} ms")
+    print(f"A 평균 시간: {average_a:.3f} ms")
+    print(f"B 평균 시간: {average_b:.3f} ms")
+
 
     # Decision
     if score_a > score_b:
@@ -82,31 +85,70 @@ def run_json_mode():
     print("=" * 18)
 
     total_count, pass_count, fail_count = 0, 0, 0
+    failed_cases = []
 
     for key, pattern_data in patterns.items():
+        print(f"\n--- {key} ---")
+
         total_count += 1
 
         size = extract_size(key)
+
+        if size is None:
+            print(f"⚠️ {key}: FAIL - 잘못된 패턴 키 형식")  # invalid pattern key
+            fail_count += 1
+            failed_cases.append((key, "잘못된 패턴 키 형식"))
+            continue
+
         pattern = pattern_data["input"]
+
         expected = normalize_label(pattern_data["expected"])
 
+        if expected is None:
+            print(f"⚠️ {key}: FAIL - expected 라벨이 올바르지 않음")    # invalid expected; missing expected
+            fail_count += 1
+            failed_cases.append((key, "expected 라벨이 올바르지 않음"))
+            continue
+
         filter_data = filters.get(f"size_{size}")
-        filter_cross = filter_data["cross"]
-        filter_x = filter_data["x"]
+
+        if filter_data is None:
+            print(f"⚠️ {key}: FAIL - 필터 {size}x{size}가 존재하지 않음")
+            fail_count += 1
+            failed_cases.append((key, f"필터 {size}x{size}가 존재하지 않음"))
+            continue
+
+        filter_cross = filter_data.get("cross")
+        filter_x = filter_data.get("x")
+
+        if filter_cross is None:
+            print(f"⚠️ {key}: FAIL - cross 필터가 존재하지 않음")   # missing cross
+            fail_count += 1
+            failed_cases.append((key, "cross 필터가 존재하지 않음"))
+            continue
+
+        if filter_x is None:
+            print(f"⚠️ {key}: FAIL - x 필터가 존재하지 않음")   # missing x
+            fail_count += 1
+            failed_cases.append((key, "x 필터가 존재하지 않음"))
+            continue
 
         if not validate_matrix(pattern, size):
-            print(f"⚠️ {key}: FAIL - 패턴 크기 불일치 (기대: {size}x{size})")
+            print(f"⚠️ {key}: FAIL - 패턴 크기 불일치 (기대: {size}x{size})")   # wrong matrix size
             fail_count += 1
+            failed_cases.append((key, "패턴 크기 불일치"))
             continue
 
         if not validate_matrix(filter_cross, size):
-            print(f"⚠️ {key}: FAIL - Cross 필터 크기 불일치 (기대: {size}x{size})")
+            print(f"⚠️ {key}: FAIL - Cross 필터 크기 불일치 (기대: {size}x{size})")   # wrong matrix size
             fail_count += 1
+            failed_cases.append((key, "Cross 필터 크기 불일치"))
             continue
 
         if not validate_matrix(filter_x, size):
-            print(f"⚠️ {key}: FAIL - X 필터 크기 불일치 (기대: {size}x{size})")
+            print(f"⚠️ {key}: FAIL - X 필터 크기 불일치 (기대: {size}x{size})")   # wrong matrix size
             fail_count += 1
+            failed_cases.append((key, "X 필터 크기 불일치"))
             continue
 
         score_cross = mac(pattern, filter_cross)
@@ -121,7 +163,6 @@ def run_json_mode():
             status = "FAIL"
             fail_count += 1
 
-        print(f"\n--- {key} ---")
         print(f"Cross 점수: {score_cross}")
         print(f"X 점수: {score_x}")
         tie = ""
@@ -147,8 +188,12 @@ def run_json_mode():
     print(f"총 테스트: {total_count}개")
     print(f"통과: {pass_count}개")
     print(f"실패: {fail_count}개")
-    print(f"\n실패 케이스:")
-    for i in range(fail_count):
-        continue
+
+    if failed_cases:
+        print("\n실패 케이스:")
+        for key, reason in failed_cases:
+            print(f"- {key}: {reason}")
+    else:
+        print("\n실패 케이스: 없음")
 
     time.sleep(1)

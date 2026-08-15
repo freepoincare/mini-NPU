@@ -47,32 +47,31 @@ def generate_test_data(file_path):
             "input": x,
             "expected": "x"
         }
+        # error case: invalid label
+        data["patterns"][f"size_{n}_3"] = {
+            "input": x,
+            "expected": "T"
+        }
+        # error case: wrong matrix size; invalid label
+        data["patterns"][f"size_{n}_4"] = {
+            "input": [[0, 1], [1, 0]],
+            "expected": "/"
+        }
+        # error case: wrong size
+        data["patterns"][f"size_7_5"] = {
+            "input": cross,
+            "expected": "+"
+        }
+        # error case: missing size
+        data["patterns"][f"size"] = {
+            "input": cross,
+            "expected": "+"
+        }
+        # error case: missing key
+        data["patterns"][f"size"] = {
+            "expected": "+"
+        }
+
 
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
-
-
-# def validate_test_data():
-#     with open(DATA_FILE_PATH, "r", encoding="utf-8") as f:
-#         data = json.load(f)
-
-#     for n in TEST_SIZES:
-#         filter_key = f"size_{n}"
-#         pattern_key = f"size_{n}_1"
-#         pattern_key_2 = f"size_{n}_2"
-#         if filter_key not in data["filters"]:
-#             return False
-#         if pattern_key not in data["patterns"]:
-#             return False
-#         if pattern_key_2 not in data["patterns"]:
-#             return False
-
-#         cross = data["filters"][filter_key]["cross"]
-#         x = data["filters"][filter_key]["x"]
-
-#         if not validate_matrix(cross, n):
-#             return False
-#         if not validate_matrix(x, n):
-#             return False
-
-#     return True

@@ -14,6 +14,8 @@ def normalize_label(label):
 
 
 def validate_matrix(matrix, n):
+    if not isinstance(matrix, list):
+        return False
     if len(matrix) != n:
         return False
     for row in matrix:
@@ -37,7 +39,7 @@ def input_matrix(n, name):
                 for v in values:
                     if not v.isdigit() or int(v) not in [0, 1]:
                         raise ValueError(f"0 또는 1을 입력하세요.")
-                    row.append(float(v))
+                    row.append(int(v))
                 matrix.append(row)
             return matrix
         except ValueError as e:
@@ -67,6 +69,7 @@ def extract_size(key):
     return int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else None
 
 
+# Performance measurement
 def benchmark(pattern, filter_matrix, repeat=REPEAT):
     times = []
     for _ in range(repeat):
@@ -94,7 +97,7 @@ def load_json(file_path):
 
 def clear_data(file_path):
     try:
-        data = {"filters": [], "patterns": []}
+        data = {"filters": {}, "patterns": {}}
         with open(file_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
     except FileNotFoundError:
@@ -135,11 +138,11 @@ def run_performance_analysis(filters, size_list=[3, 5, 13, 25], repeat=REPEAT):
         pattern = generate_cross(size)
 
         average_cross = benchmark(pattern, filter_cross)
-        average_x = benchmark(pattern, filter_x)
-        average_total = average_cross + average_x
+        #average_x = benchmark(pattern, filter_x)
+        #average_total = average_cross + average_x
 
         mac_operation = size * size
 
         size_str = f"{size}x{size}"
-        print(f"{size_str:<10} {average_total:<20.3f} {mac_operation}")
+        print(f"{size_str:<10} {average_cross:<20.3f} {mac_operation}")
     return

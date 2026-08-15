@@ -1,8 +1,8 @@
 import time
 from pathlib import Path
 from config import DATA_FILE_PATH
-from mode import *
-from utility import *
+from mode import run_user_mode, run_json_mode
+from utility import clear_data
 from pattern_generator import generate_test_data
 
 
