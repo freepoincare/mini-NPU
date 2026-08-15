@@ -39,10 +39,12 @@ def generate_test_data(file_path):
             "cross": cross,
             "x": x
         }
+        # normal case: Cross
         data["patterns"][f"size_{n}_1"] = {
             "input": cross,
             "expected": "+"
         }
+        # normal case: X
         data["patterns"][f"size_{n}_2"] = {
             "input": x,
             "expected": "x"
@@ -52,26 +54,27 @@ def generate_test_data(file_path):
             "input": x,
             "expected": "T"
         }
-        # error case: wrong matrix size; invalid label
+        # error case: wrong matrix size
         data["patterns"][f"size_{n}_4"] = {
-            "input": [[0, 1], [1, 0]],
-            "expected": "/"
-        }
-        # error case: wrong size
-        data["patterns"][f"size_7_5"] = {
-            "input": cross,
-            "expected": "+"
-        }
-        # error case: missing size
-        data["patterns"][f"size"] = {
-            "input": cross,
-            "expected": "+"
-        }
-        # error case: missing key
-        data["patterns"][f"size"] = {
-            "expected": "+"
+            "input": [[1, 1], [1, 1]],
+            "expected": "x"
         }
 
+    # Special schema-error cases
+    # error case: key size mismatch
+    data["patterns"][f"size_7_5"] = {
+        "input": generate_cross(5),
+        "expected": "+"
+    }
+    # error case: invalid key format
+    data["patterns"][f"invalid_key_6"] = {
+        "input": generate_cross(5),
+        "expected": "+"
+    }
+    # error case: missing input
+    data["patterns"][f"size_5_7"] = {
+        "expected": "+"
+    }
 
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)

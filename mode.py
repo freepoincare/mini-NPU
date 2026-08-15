@@ -100,7 +100,7 @@ def run_json_mode():
             failed_cases.append((key, "잘못된 패턴 키 형식"))
             continue
 
-        pattern = pattern_data["input"]
+        pattern = pattern_data.get("input")
 
         expected = normalize_label(pattern_data["expected"])
 
