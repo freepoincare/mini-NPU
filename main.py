@@ -14,6 +14,7 @@ def show_main_menu():
     print("1. 사용자 입력 (3x3)")
     print("2. data.json 분석")
     print("3. data.json 생성")
+    print("4. data.json 초기화")
     print("0. 종료")
     print("🔹" * 18)
 
@@ -36,6 +37,7 @@ def run_program():
                     if answer in ["y", "yes"]:
                         generate_test_data(DATA_FILE_PATH)
                         print("✅ data.json 생성 완료")
+                        time.sleep(1)
                         break
                     elif answer in ["n", "no"]:
                         print("데이터 생성을 취소합니다.")
@@ -46,6 +48,10 @@ def run_program():
                 generate_test_data(DATA_FILE_PATH)
                 print("✅ data.json 생성 완료")
                 time.sleep(1)
+        elif choice == "4":
+            clear_data(DATA_FILE_PATH)
+            print("✅ data.json이 초기화 되었습니다.")
+            time.sleep(1)
         elif choice == "0":
             print("\n프로그램을 종료합니다...")
             time.sleep(1)

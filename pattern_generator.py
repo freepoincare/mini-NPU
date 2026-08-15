@@ -49,7 +49,7 @@ def generate_test_data(file_path):
         }
 
     with open(file_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+        json.dump(data, f, indent=4, ensure_ascii=False)
 
 
 # def validate_test_data():

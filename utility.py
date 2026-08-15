@@ -77,10 +77,33 @@ def benchmark(pattern, filter_matrix, repeat=REPEAT):
     return sum(times) / len(times)
 
 
-def load_json(filename):
-    with open(filename, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    return data
+def load_json(file_path):
+    try: 
+        with open(file_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"❌ 파일을 찾을 수 없습니다: {file_path}")
+    except json.JSONDecodeError:
+        print(f"❌ 올바른 JSON 파일이 아닙니다: {file_path}")
+    except PermissionError:
+        print(f"❌ 파일을 읽을 권한이 없습니다: {file_path}")
+    except Exception as e:
+        print(f"❌ 예상하지 못한 오류가 발생했습니다: {e}")
+    return None
+
+
+def clear_data(file_path):
+    try:
+        data = {"filters": [], "patterns": []}
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
+    except FileNotFoundError:
+        print(f"❌ 파일을 찾을 수 없습니다: {file_path}")
+    except PermissionError:
+        print(f"❌ 파일을 쓸 권한이 없습니다: {file_path}")
+    except Exception as e:
+        print(f"❌ 예상하지 못한 오류가 발생했습니다: {e}")
+    return None   # no need
 
 
 def run_performance_analysis(filters, size_list=[3, 5, 13, 25], repeat=REPEAT):

@@ -53,8 +53,23 @@ def run_json_mode():
 
     data = load_json(DATA_FILE_PATH)
 
+    if data is None:
+        print("❌ data.json을 먼저 생성해 주세요.")
+        time.sleep(1)
+        return
+
+    if "filters" not in data or "patterns" not in data:
+        print("❌ filters 또는 patterns가 없습니다. data.json을 먼저 생성해 주세요.")
+        time.sleep(1)
+        return
+    
     filters = data["filters"]
     patterns = data["patterns"]
+
+    if not filters or not patterns:
+        print("❌ filters 또는 patterns이 비어 있습니다. data.json을 먼저 생성해 주세요.")
+        time.sleep(1)
+        return
 
     print(f"✅ size_5 필터 로드 완료 (Cross, X)")
     print(f"✅ size_13 필터 로드 완료 (Cross, X)")
