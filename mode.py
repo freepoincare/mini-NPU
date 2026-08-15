@@ -1,7 +1,6 @@
 from pathlib import Path
-from config import DATA_FILE_PATH
+from config import DATA_FILE_PATH, EPSILON, REPEAT
 from utility import *
-from pattern_generator import generate_cross, generate_test_data
 
 
 def run_user_mode(n):
@@ -61,6 +60,8 @@ def run_json_mode():
     print(f"✅ size_13 필터 로드 완료 (Cross, X)")
     print(f"✅ size_25 필터 로드 완료 (Cross, X)")
 
+    time.sleep(1)
+
     print("\n" + "=" * 18)
     print("[2] 패턴 분석 (라벨 정규화 적용)")
     print("=" * 18)
@@ -108,9 +109,12 @@ def run_json_mode():
         print(f"\n--- {key} ---")
         print(f"Cross 점수: {score_cross}")
         print(f"X 점수: {score_x}")
+        tie = ""
         if result == "UNDECIDED":
             tie = " (동점 규칙)"
         print(f"판정: {result} | expected: {expected} | {status}{tie}")
+
+    time.sleep(1)
 
     print("\n" + "=" * 18)
     print("[3] 성능 분석 (평균/10회)")
@@ -118,7 +122,9 @@ def run_json_mode():
     print("크기      평균 시간 (ms)     연산 횟수")
     print("=" * 18)
 
-    run_performance_analysis(filters, size_list=[3, 5, 13, 25], repeat=REPEAT)
+    run_performance_analysis(filters, size_list=[3, 5, 13, 25])
+
+    time.sleep(1)
 
     print("\n" + "=" * 18)
     print("[4] 결과 요약")
@@ -128,4 +134,6 @@ def run_json_mode():
     print(f"실패: {fail_count}개")
     print(f"\n실패 케이스:")
     for i in range(fail_count):
-        # todo
+        continue
+
+    time.sleep(1)

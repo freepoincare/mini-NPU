@@ -1,11 +1,7 @@
 import json
 import time
-
-from pattern_generator import generate_cross
-
-
-EPSILON = 1e-9
-REPEAT = 10
+from pattern_generator import generate_cross, generate_x
+from config import REPEAT, EPSILON
 
 
 def normalize_label(label):
@@ -91,14 +87,36 @@ def run_performance_analysis(filters, size_list=[3, 5, 13, 25], repeat=REPEAT):
     # performance analysis for each filter size
     for size in size_list:
         filter_data = filters.get(f"size_{size}")
-        filter_cross = filter_data["cross"]
-        filter_x = filter_data["x"]
+
+        if filter_data is None:
+            if size in [3, 5, 13, 25]:
+                filter_cross = generate_cross(size)
+                filter_x = generate_x(size)
+                print(f"⚠️ size_{size}: JSON 데이터가 없어 기본 패턴을 생성하여 측정합니다.")
+            else:
+                print(f"⚠️ size_{size}: 지원하지 않는 크기이므로 건너뜁니다.")
+                continue
+        else:
+            filter_cross = filter_data.get("cross")
+            filter_x = filter_data.get("x")
+
+            if filter_cross is None or filter_x is None:
+                print(f"⚠️ size_{size}: 필터 키가 누락되어 건너뜁니다.")
+                continue
+
+        if not validate_matrix(filter_cross, size) or not validate_matrix(filter_x, size):
+            print(f"⚠️ size_{size}: 필터 크기 불일치로 측정을 건너뜁니다.")
+            continue
 
         # benchmark with a sample pattern (Cross)
         pattern = generate_cross(size)
+
         average_cross = benchmark(pattern, filter_cross)
         average_x = benchmark(pattern, filter_x)
         average_total = average_cross + average_x
 
-        print(f"{size:<10} {average_total:<20.3f} {repeat * 2}")
+        mac_operation = size * size
+
+        size_str = f"{size}x{size}"
+        print(f"{size_str:<10} {average_total:<20.3f} {mac_operation}")
     return

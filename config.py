@@ -1,1 +1,4 @@
 DATA_FILE_PATH = "data.json"
+TEST_SIZES = [5, 13, 25]
+EPSILON = 1e-9
+REPEAT = 10

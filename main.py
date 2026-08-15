@@ -41,10 +41,11 @@ def run_program():
                         print("데이터 생성을 취소합니다.")
                         break
                     else:
-                        print("y 또는 n 를 입력해주세요.")
+                        print("y 또는 n 를 입력해주세요.\n")
             else:
                 generate_test_data(DATA_FILE_PATH)
                 print("✅ data.json 생성 완료")
+                time.sleep(1)
         elif choice == "0":
             print("\n프로그램을 종료합니다...")
             time.sleep(1)

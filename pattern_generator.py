@@ -1,7 +1,5 @@
 import json
-from main import DATA_FILE_PATH
-
-TEST_SIZES = [5, 13, 25]
+from config import TEST_SIZES
 
 
 def generate_cross(n):
