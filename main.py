@@ -7,16 +7,16 @@ from pattern_generator import generate_test_data
 
 
 def show_main_menu():
-    print("\n" + "ㅁ" * 18)
+    print("\n" + "🔹" * 18)
     print("         Mini NPU Simulator")
-    print("ㅁ" * 18)
+    print("🔹" * 18)
     print("[모드 선택]")
     print("1. 사용자 입력 (3x3)")
     print("2. data.json 분석")
     print("3. data.json 생성")
     print("4. data.json 초기화")
     print("0. 종료")
-    print("ㅁ" * 18)
+    print("🔹" * 18)
 
 
 def run_program():

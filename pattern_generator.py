@@ -75,6 +75,11 @@ def generate_test_data(file_path):
     data["patterns"][f"size_5_7"] = {
         "expected": "+"
     }
+    # error case: missing expected value
+    data["patterns"][f"size_5_8"] = {
+        "input": generate_cross(5),
+        "expected": None
+    }
 
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)

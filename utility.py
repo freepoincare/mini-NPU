@@ -120,7 +120,7 @@ def run_performance_analysis(filters, size_list=[3, 5, 13, 25], repeat=REPEAT):
             if size in [3, 5, 13, 25]:
                 filter_cross = generate_cross(size)
                 filter_x = generate_x(size)
-                print(f"⚠️ size_{size}: JSON 데이터가 없어 기본 패턴을 생성하여 측정합니다.")
+                #print(f"⚠️ size_{size}: JSON 데이터가 없어 기본 패턴을 생성하여 측정합니다.")
             else:
                 print(f"⚠️ size_{size}: 지원하지 않는 크기이므로 건너뜁니다.")
                 continue
@@ -140,11 +140,11 @@ def run_performance_analysis(filters, size_list=[3, 5, 13, 25], repeat=REPEAT):
         pattern = generate_cross(size)
 
         average_cross = benchmark(pattern, filter_cross)
-        #average_x = benchmark(pattern, filter_x)
-        #average_total = average_cross + average_x
+        average_x = benchmark(pattern, filter_x)
+        average_total = average_cross + average_x
 
         mac_operation = size * size
 
         size_str = f"{size}x{size}"
-        print(f"{size_str:<10} {average_cross:<20.3f} {mac_operation}")
+        print(f"{size_str:<10} {average_total:<20.3f} {mac_operation}")
     return

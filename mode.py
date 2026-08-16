@@ -5,23 +5,23 @@ from utility import input_matrix, mac, benchmark, load_json, extract_size, norma
 
 def run_user_mode(n):
     # Filter
-    print("\n" + "=" * 18)
+    print("\n" + "=" * 36)
     print("[1] 필터 입력")
-    print("=" * 18)
+    print("=" * 36)
     filter_a = input_matrix(n, "필터 A")
     print("")
     filter_b = input_matrix(n, "필터 B")
 
     # Pattern
-    print("\n" + "=" * 18)
+    print("\n" + "=" * 36)
     print("[2] 패턴 입력")
-    print("=" * 18)
+    print("=" * 36)
     pattern = input_matrix(n, "패턴")
 
     # MAC
-    print("\n" + "=" * 18)
+    print("\n" + "=" * 36)
     print("[3] MAC 결과")
-    print("=" * 18)
+    print("=" * 36)
     score_a = mac(pattern, filter_a)
     score_b = mac(pattern, filter_b)
     print(f"A 점수: {score_a}")
@@ -50,9 +50,9 @@ def run_user_mode(n):
 
 
 def run_json_mode():
-    print("\n" + "=" * 18)
+    print("\n" + "=" * 36)
     print("[1] 필터 로드")
-    print("=" * 18)
+    print("=" * 36)
 
     data = load_json(DATA_FILE_PATH)
 
@@ -80,9 +80,9 @@ def run_json_mode():
 
     time.sleep(1)
 
-    print("\n" + "=" * 18)
+    print("\n" + "=" * 36) 
     print("[2] 패턴 분석 (라벨 정규화 적용)")
-    print("=" * 18)
+    print("=" * 36)
 
     total_count, pass_count, fail_count = 0, 0, 0
     failed_cases = []
@@ -155,36 +155,40 @@ def run_json_mode():
         score_x = mac(pattern, filter_x)
 
         result = decide_label(score_cross, score_x)
-        
-        if result == expected:
+
+        tie = ""
+        if result == "UNDECIDED":
+            status = "FAIL"
+            tie = " (동점 규칙)"
+            fail_count += 1
+            failed_cases.append((key, "동점(UNDECIDED) 처리 규칙에 따라 FAIL")) 
+        elif result == expected:
             status = "PASS"
             pass_count += 1
         else:
             status = "FAIL"
             fail_count += 1
+            failed_cases.append((key, "expected 라벨과 다르므로 FAIL"))
 
         print(f"Cross 점수: {score_cross}")
         print(f"X 점수: {score_x}")
-        tie = ""
-        if result == "UNDECIDED":
-            tie = " (동점 규칙)"
         print(f"판정: {result} | expected: {expected} | {status}{tie}")
 
     time.sleep(1)
 
-    print("\n" + "=" * 18)
+    print("\n" + "=" * 36)
     print("[3] 성능 분석 (평균/10회)")
-    print("=" * 18)
+    print("=" * 36)
     print("크기      평균 시간 (ms)     연산 횟수")
-    print("=" * 18)
+    print("=" * 36)
 
     run_performance_analysis(filters, size_list=[3, 5, 13, 25])
 
     time.sleep(1)
 
-    print("\n" + "=" * 18)
+    print("\n" + "=" * 36)
     print("[4] 결과 요약")
-    print("=" * 18)
+    print("=" * 36)
     print(f"총 테스트: {total_count}개")
     print(f"통과: {pass_count}개")
     print(f"실패: {fail_count}개")
