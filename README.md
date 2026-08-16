@@ -118,7 +118,7 @@ python main.py
 
 <img src="./images/main_menu.png" width="300" />
 
-> 모드 1 (유저 모드):
+> 모드 1 (사용자 모드):
 
 <img src="./images/mode1.png" width="300" />
 
