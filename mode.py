@@ -102,7 +102,7 @@ def run_json_mode():
 
         pattern = pattern_data.get("input")
 
-        expected = normalize_label(pattern_data["expected"])
+        expected = normalize_label(pattern_data.get("expected"))
 
         if expected is None:
             print(f"⚠️ {key}: FAIL - expected 라벨이 올바르지 않음")    # invalid expected; missing expected

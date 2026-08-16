@@ -14,6 +14,8 @@ def normalize_label(label):
 
 
 def validate_matrix(matrix, n):
+    if matrix is None:
+        return False
     if not isinstance(matrix, list):
         return False
     if len(matrix) != n:

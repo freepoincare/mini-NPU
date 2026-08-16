@@ -7,16 +7,16 @@ from pattern_generator import generate_test_data
 
 
 def show_main_menu():
-    print("\n" + "🔹" * 18)
+    print("\n" + "ㅁ" * 18)
     print("         Mini NPU Simulator")
-    print("🔹" * 18)
+    print("ㅁ" * 18)
     print("[모드 선택]")
     print("1. 사용자 입력 (3x3)")
     print("2. data.json 분석")
     print("3. data.json 생성")
     print("4. data.json 초기화")
     print("0. 종료")
-    print("🔹" * 18)
+    print("ㅁ" * 18)
 
 
 def run_program():
@@ -57,7 +57,7 @@ def run_program():
             time.sleep(1)
             break
         else:
-            print("\n잘못된 입력입니다. 0-3 사이의 숫자를 입력하세요.")
+            print("\n잘못된 입력입니다. 0-4 사이의 숫자를 입력하세요.")
             time.sleep(1)
 
 
