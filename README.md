@@ -42,7 +42,7 @@ Mini NPU Simulator는 AI 가속기(NPU)의 핵심 연산 단위인 **MAC(Multipl
    - 테스트 결과 종합 요약(전체/통과/실패 수) 및 실패 케이스 상세 사유 출력.
 
 3. **성능 분석 및 벤치마크**
-   - I/O 시간을 제외한纯 MAC 연산 구간 중심 시간 측정 (기본 10회 반복 측정 후 평균산출).
+   - I/O 시간을 제외한 MAC 연산 구간 중심 시간 측정 (기본 10회 반복 측정 후 평균산출).
    - 크기($N \times N$)별 평균 연산 시간(ms)과 총 연산 횟수($N^2$) 표 출력.
 
 4. **테스트 데이터 생성 및 초기화**
@@ -63,6 +63,7 @@ Mini NPU Simulator는 AI 가속기(NPU)의 핵심 연산 단위인 **MAC(Multipl
 
 ```text
 mini-NPU/
+├── images/               # 프로그램 스크린샷, 그래프 이미지
 ├── main.py               # 콘솔 메뉴 인터페이스 및 프로그램 메인 루프
 ├── mode.py               # 모드 1(사용자 입력), 모드 2(data.json 분석) 실행 로직
 ├── utility.py            # MAC 연산, 라벨 정규화, 벤치마크, 검증 등 공통 유틸리티
@@ -107,6 +108,28 @@ python main.py
    - `0`: 종료
 
 참고) `data.json`은 루트 디렉터리에 위치한다.
+
+
+<details>
+<summary>[실행 스크린샷]</summary>
+<br>
+
+> 메인 메뉴:
+
+<img src="./images/main_menu.png" width="300" />
+
+> 모드 1 (유저 모드):
+
+<img src="./images/mode1.png" width="300" />
+
+> 모드 2 (data.json 모드):
+
+<img src="./images/mode2_1.png" width="300" />
+
+<img src="./images/mode2_2.png" width="300" />
+
+<br>
+</details>
 
 ---
 
@@ -168,6 +191,6 @@ python main.py
 2. **실측 데이터와 연산 횟수의 상관관계**:
    - $N=5$ (연산 25회) 대비 $N=13$ (연산 169회)으로 증가할 때, 연산 횟수는 약 6.76배 늘어나며 연산 시간 역시 약 5.4배~6.8배 증가하는 경향을 보임.
    - $N=5$ (연산 25회) 대비 $N=25$ (연산 625회)로 데이터 변의 길이가 5배 커질 때, 연산 횟수는 $5^2 = 25$배 증가하며 실측 연산 시간 또한 이에 비례하여 크게 증가함을 관찰할 수 있음.
-   - 차수가 높아질수록 I/O overhead를 제외한 순 CPU 연산 시간이 $N^2$ 곡선에 수렴함을 수치적으로 검증할 수 있음.
+   - 차수가 높아질수록 I/O overhead를 제외한 CPU 연산 시간이 $N^2$ 곡선에 수렴함을 수치적으로 검증할 수 있음.
 
 <img src="./images/computation_performance.png" width="700">
