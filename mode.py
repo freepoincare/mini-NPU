@@ -26,11 +26,6 @@ def run_user_mode(n):
     score_b = mac(pattern, filter_b)
     print(f"A 점수: {score_a}")
     print(f"B 점수: {score_b}")
-
-    if abs(score_a - score_b) < EPSILON:
-        print(f"판정: 판정 불가 (|A - B| < {EPSILON})")
-        time.sleep(1)
-        return
     
     # Performance measurement
     average_a = benchmark(pattern, filter_a)
@@ -40,9 +35,10 @@ def run_user_mode(n):
     print(f"A 평균 시간: {average_a:.3f} ms")
     print(f"B 평균 시간: {average_b:.3f} ms")
 
-
     # Decision
-    if score_a > score_b:
+    if abs(score_a - score_b) < EPSILON:
+        print(f"판정: 판정 불가 (|A - B| < {EPSILON})")    
+    elif score_a > score_b:
         print("판정: A")
     else:
         print("판정: B")
