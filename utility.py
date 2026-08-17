@@ -111,6 +111,101 @@ def clear_data(file_path):
     return None   # no need
 
 
+def analyze_patterns(filters, patterns):
+
+    total_count, pass_count, fail_count = 0, 0, 0
+    failed_cases = []
+
+    for key, pattern_data in patterns.items():
+        print(f"\n--- {key} ---")
+
+        total_count += 1
+
+        size = extract_size(key)
+
+        if size is None:
+            print(f"⚠️ {key}: FAIL - 잘못된 패턴 키 형식")  # invalid pattern key
+            fail_count += 1
+            failed_cases.append((key, "잘못된 패턴 키 형식"))
+            continue
+
+        pattern = pattern_data.get("input")
+
+        expected = normalize_label(pattern_data.get("expected"))
+
+        if expected is None:
+            print(f"⚠️ {key}: FAIL - expected 라벨이 올바르지 않음")    # invalid expected; missing expected
+            fail_count += 1
+            failed_cases.append((key, "expected 라벨이 올바르지 않음"))
+            continue
+
+        filter_data = filters.get(f"size_{size}")
+
+        if filter_data is None:
+            print(f"⚠️ {key}: FAIL - 필터 {size}x{size}가 존재하지 않음")
+            fail_count += 1
+            failed_cases.append((key, f"필터 {size}x{size}가 존재하지 않음"))
+            continue
+
+        filter_cross = filter_data.get("cross")
+        filter_x = filter_data.get("x")
+
+        if filter_cross is None:
+            print(f"⚠️ {key}: FAIL - cross 필터가 존재하지 않음")   # missing cross
+            fail_count += 1
+            failed_cases.append((key, "cross 필터가 존재하지 않음"))
+            continue
+
+        if filter_x is None:
+            print(f"⚠️ {key}: FAIL - x 필터가 존재하지 않음")   # missing x
+            fail_count += 1
+            failed_cases.append((key, "x 필터가 존재하지 않음"))
+            continue
+
+        if not validate_matrix(pattern, size):
+            print(f"⚠️ {key}: FAIL - 패턴 크기 불일치 (기대: {size}x{size})")   # wrong matrix size
+            fail_count += 1
+            failed_cases.append((key, "패턴 크기 불일치"))
+            continue
+
+        if not validate_matrix(filter_cross, size):
+            print(f"⚠️ {key}: FAIL - Cross 필터 크기 불일치 (기대: {size}x{size})")   # wrong matrix size
+            fail_count += 1
+            failed_cases.append((key, "Cross 필터 크기 불일치"))
+            continue
+
+        if not validate_matrix(filter_x, size):
+            print(f"⚠️ {key}: FAIL - X 필터 크기 불일치 (기대: {size}x{size})")   # wrong matrix size
+            fail_count += 1
+            failed_cases.append((key, "X 필터 크기 불일치"))
+            continue
+
+        score_cross = mac(pattern, filter_cross)
+        score_x = mac(pattern, filter_x)
+
+        result = decide_label(score_cross, score_x)
+
+        tie = ""
+        if result == "UNDECIDED":
+            status = "FAIL"
+            tie = " (동점 규칙)"
+            fail_count += 1
+            failed_cases.append((key, "동점(UNDECIDED) 처리 규칙에 따라 FAIL")) 
+        elif result == expected:
+            status = "PASS"
+            pass_count += 1
+        else:
+            status = "FAIL"
+            fail_count += 1
+            failed_cases.append((key, "expected 라벨과 다르므로 FAIL"))
+
+        print(f"Cross 점수: {score_cross}")
+        print(f"X 점수: {score_x}")
+        print(f"판정: {result} | expected: {expected} | {status}{tie}")
+
+    return total_count, pass_count, fail_count, failed_cases
+
+
 def run_performance_analysis(filters, size_list=[3, 5, 13, 25], repeat=REPEAT):
     # performance analysis for each filter size
     for size in size_list:
