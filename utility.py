@@ -10,19 +10,20 @@ def normalize_label(label):
         return "Cross"
     if label == "x":
         return "X"
+    if label in ["undecided", "tie", "draw"]:
+        return "UNDECIDED"
     return None
 
 
 def validate_matrix(matrix, n):
-    if matrix is None:
-        return False
-    if not isinstance(matrix, list):
-        return False
-    if len(matrix) != n:
+    if matrix is None or not isinstance(matrix, list) or len(matrix) != n:
         return False
     for row in matrix:
-        if len(row) != n:
+        if not isinstance(row, list) or len(row) != n:
             return False
+        for v in row:
+            if not isinstance(v, (int, float)) or v not in [0, 1]:
+                return False
     return True
 
 
@@ -73,6 +74,8 @@ def extract_size(key):
 
 # Performance measurement
 def benchmark(pattern, filter_matrix, repeat=REPEAT):
+    if repeat is None or repeat <= 0:
+        raise ValueError("repeat must be >= 1")
     times = []
     for _ in range(repeat):
         start = time.perf_counter()
@@ -206,7 +209,10 @@ def analyze_patterns(filters, patterns):
     return total_count, pass_count, fail_count, failed_cases
 
 
-def run_performance_analysis(filters, size_list=[3, 5, 13, 25], repeat=REPEAT):
+def run_performance_analysis(filters, size_list=None, repeat=REPEAT):
+    if size_list is None:
+        size_list = [3, 5, 13, 25]
+
     # performance analysis for each filter size
     for size in size_list:
         filter_data = filters.get(f"size_{size}")
@@ -234,8 +240,8 @@ def run_performance_analysis(filters, size_list=[3, 5, 13, 25], repeat=REPEAT):
         # benchmark with a sample pattern (Cross)
         pattern = generate_cross(size)
 
-        average_cross = benchmark(pattern, filter_cross)
-        average_x = benchmark(pattern, filter_x)
+        average_cross = benchmark(pattern, filter_cross, repeat=repeat)
+        average_x = benchmark(pattern, filter_x, repeat=repeat)
         average_total = average_cross + average_x
 
         mac_operation = size * size
