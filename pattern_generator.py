@@ -80,6 +80,17 @@ def generate_test_data(file_path):
         "input": generate_cross(5),
         "expected": None
     }
+    # UNDECIDED case: tie
+    data["patterns"][f"size_5_9"] = {
+        "input": [
+            [1,1,1,1,1],
+            [1,1,1,1,1],
+            [1,1,1,1,1],
+            [1,1,1,1,1],
+            [1,1,1,1,1]
+        ],
+        "expected": "x"
+    }
 
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)

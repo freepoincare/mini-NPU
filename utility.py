@@ -115,6 +115,19 @@ def clear_data(file_path):
 
 
 def analyze_patterns(filters, patterns):
+    """
+    Validate and analyze patterns against filters.
+    Checks include:
+    - pattern key format (size_n_k)
+    - pattern_data type
+    - input existence/type
+    - expected label validity
+    - per-size filter existence/type
+    - cross / x existence/type
+    - matrix shape/value validity (validate_matrix)
+    - tie rule (UNDECIDED => FAIL)
+    - pass/fail counting + failed case logging
+    """
 
     total_count, pass_count, fail_count = 0, 0, 0
     failed_cases = []
@@ -132,7 +145,19 @@ def analyze_patterns(filters, patterns):
             failed_cases.append((key, "잘못된 패턴 키 형식"))
             continue
 
+        if pattern_data is None or not isinstance(pattern_data, dict):
+            print(f"⚠️ {key}: FAIL - 패턴 데이터가 올바르지 않음")  # invalid pattern data
+            fail_count += 1
+            failed_cases.append((key, "패턴 데이터가 올바르지 않음"))
+            continue
+
         pattern = pattern_data.get("input")
+
+        if pattern is None or not isinstance(pattern, list):
+            print(f"⚠️ {key}: FAIL - 패턴 입력이 올바르지 않음")  # invalid pattern input
+            fail_count += 1
+            failed_cases.append((key, "패턴 입력이 올바르지 않음"))
+            continue
 
         expected = normalize_label(pattern_data.get("expected"))
 
@@ -144,25 +169,25 @@ def analyze_patterns(filters, patterns):
 
         filter_data = filters.get(f"size_{size}")
 
-        if filter_data is None:
-            print(f"⚠️ {key}: FAIL - 필터 {size}x{size}가 존재하지 않음")
+        if filter_data is None or not isinstance(filter_data, dict):
+            print(f"⚠️ {key}: FAIL - 필터 {size}x{size}가 존재하지 않거나 데이터 형식이 올바르지 않음")  # missing filter or invalid filter data
             fail_count += 1
-            failed_cases.append((key, f"필터 {size}x{size}가 존재하지 않음"))
+            failed_cases.append((key, f"필터 {size}x{size}가 존재하지 않거나 데이터 형식이 올바르지 않음"))
             continue
 
         filter_cross = filter_data.get("cross")
         filter_x = filter_data.get("x")
 
-        if filter_cross is None:
-            print(f"⚠️ {key}: FAIL - cross 필터가 존재하지 않음")   # missing cross
+        if filter_cross is None or not isinstance(filter_cross, list):
+            print(f"⚠️ {key}: FAIL - cross 필터가 존재하지 않거나 데이터 형식이 올바르지 않음")   # missing cross or invalid data
             fail_count += 1
-            failed_cases.append((key, "cross 필터가 존재하지 않음"))
+            failed_cases.append((key, "cross 필터가 존재하지 않거나 데이터 형식이 올바르지 않음"))
             continue
 
-        if filter_x is None:
-            print(f"⚠️ {key}: FAIL - x 필터가 존재하지 않음")   # missing x
+        if filter_x is None or not isinstance(filter_x, list):
+            print(f"⚠️ {key}: FAIL - x 필터가 존재하지 않거나 데이터 형식이 올바르지 않음")   # missing x or invalid data
             fail_count += 1
-            failed_cases.append((key, "x 필터가 존재하지 않음"))
+            failed_cases.append((key, "x 필터가 존재하지 않거나 데이터 형식이 올바르지 않음"))
             continue
 
         if not validate_matrix(pattern, size):

@@ -73,6 +73,11 @@ def run_json_mode():
         time.sleep(1)
         return
 
+    if not isinstance(filters, dict) or not isinstance(patterns, dict):
+        print("❌ filters 또는 patterns 데이터 형식이 올바르지 않습니다.")
+        time.sleep(1)
+        return
+
     print(f"✅ size_5 필터 로드 완료 (Cross, X)")
     print(f"✅ size_13 필터 로드 완료 (Cross, X)")
     print(f"✅ size_25 필터 로드 완료 (Cross, X)")
