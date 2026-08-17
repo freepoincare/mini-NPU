@@ -72,13 +72,21 @@ def run_json_mode():
     filters = data["filters"]
     patterns = data["patterns"]
 
-    if not filters or not patterns:
-        print("❌ filters 또는 patterns이 비어 있습니다. data.json을 먼저 생성해 주세요.")
+    # Check for None
+    if filters is None or patterns is None:
+        print("❌ filters 또는 patterns가 None입니다. data.json을 먼저 생성해 주세요.")
         time.sleep(1)
         return
 
+    # Check for type
     if not isinstance(filters, dict) or not isinstance(patterns, dict):
         print("❌ filters 또는 patterns 데이터 형식이 올바르지 않습니다.")
+        time.sleep(1)
+        return
+
+    # Check for emptiness
+    if not filters or not patterns:
+        print("❌ filters 또는 patterns이 비어 있습니다. data.json을 먼저 생성해 주세요.")
         time.sleep(1)
         return
 

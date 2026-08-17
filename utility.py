@@ -145,7 +145,7 @@ def analyze_patterns(filters, patterns):
             failed_cases.append((key, "잘못된 패턴 키 형식"))
             continue
 
-        if pattern_data is None or not isinstance(pattern_data, dict):
+        if pattern_data is None or not isinstance(pattern_data, dict) or not pattern_data:
             print(f"⚠️ {key}: FAIL - 패턴 데이터가 올바르지 않음")  # invalid pattern data
             fail_count += 1
             failed_cases.append((key, "패턴 데이터가 올바르지 않음"))
@@ -153,7 +153,7 @@ def analyze_patterns(filters, patterns):
 
         pattern = pattern_data.get("input")
 
-        if pattern is None or not isinstance(pattern, list):
+        if pattern is None or not isinstance(pattern, list) or not pattern:
             print(f"⚠️ {key}: FAIL - 패턴 입력이 올바르지 않음")  # invalid pattern input
             fail_count += 1
             failed_cases.append((key, "패턴 입력이 올바르지 않음"))
@@ -169,7 +169,7 @@ def analyze_patterns(filters, patterns):
 
         filter_data = filters.get(f"size_{size}")
 
-        if filter_data is None or not isinstance(filter_data, dict):
+        if filter_data is None or not isinstance(filter_data, dict) or not filter_data:
             print(f"⚠️ {key}: FAIL - 필터 {size}x{size}가 존재하지 않거나 데이터 형식이 올바르지 않음")  # missing filter or invalid filter data
             fail_count += 1
             failed_cases.append((key, f"필터 {size}x{size}가 존재하지 않거나 데이터 형식이 올바르지 않음"))
@@ -178,13 +178,13 @@ def analyze_patterns(filters, patterns):
         filter_cross = filter_data.get("cross")
         filter_x = filter_data.get("x")
 
-        if filter_cross is None or not isinstance(filter_cross, list):
+        if filter_cross is None or not isinstance(filter_cross, list) or not filter_cross:
             print(f"⚠️ {key}: FAIL - cross 필터가 존재하지 않거나 데이터 형식이 올바르지 않음")   # missing cross or invalid data
             fail_count += 1
             failed_cases.append((key, "cross 필터가 존재하지 않거나 데이터 형식이 올바르지 않음"))
             continue
 
-        if filter_x is None or not isinstance(filter_x, list):
+        if filter_x is None or not isinstance(filter_x, list) or not filter_x:
             print(f"⚠️ {key}: FAIL - x 필터가 존재하지 않거나 데이터 형식이 올바르지 않음")   # missing x or invalid data
             fail_count += 1
             failed_cases.append((key, "x 필터가 존재하지 않거나 데이터 형식이 올바르지 않음"))
