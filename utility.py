@@ -227,8 +227,12 @@ def analyze_patterns(filters, patterns):
             fail_count += 1
             failed_cases.append((key, "expected 라벨과 다르므로 FAIL"))
 
-        print(f"Cross 점수: {score_cross}")
-        print(f"X 점수: {score_x}")
+        if result == "UNDECIDED":
+            print(f"Cross 점수: {score_cross:.16f}")
+            print(f"X 점수: {score_x:.16f}")
+        else:
+            print(f"Cross 점수: {score_cross}")
+            print(f"X 점수: {score_x}")
         print(f"판정: {result} | expected: {expected} | {status}{tie}")
 
     return total_count, pass_count, fail_count, failed_cases
